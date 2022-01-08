@@ -26,4 +26,40 @@ const createDBIfNotExist = (connection: mysql.Connection) => {
   });
 };
 
-createDB()
+const createTablesToDB = () => {
+  const connection = mysql.createConnection({
+    host: 'localhost',
+    port: 8889,
+    user: 'root',
+    password: 'root',
+    database: process.env.DATABASE_NAME || 'quote_machine',
+  });
+
+  connection.connect((err) => {
+    if (err) throw err;
+    const createUsersTable =
+      'CREATE TABLE Users (username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, userID VARCHAR(255) NOT NULL PRIMARY KEY)';
+
+    const createQuotesTable = `CREATE TABLE Quotes (quote TEXT NOT NULL, quoteID VARCHAR(255) NOT NULL, userID VARCHAR(255) NOT NULL, PRIMARY KEY (quoteID, userID))`;
+
+    const createRatingsTable = `CREATE TABLE Ratings (rating INT  NOT NULL, quoteID VARCHAR(255) NOT NULL, userID VARCHAR(255) NOT NULL, PRIMARY KEY (quoteID, userID))`;
+
+    connection.query(createUsersTable, (err, result) => {
+      if (err) throw err;
+      console.log('created Users table');
+    });
+
+    connection.query(createQuotesTable, (err, result) => {
+      if (err) throw err;
+      console.log('created Quotes table');
+    });
+
+    connection.query(createRatingsTable, (err, result) => {
+      if (err) throw err;
+      console.log('created Ratings table');
+    });
+  });
+};
+
+createDB();
+createTablesToDB();

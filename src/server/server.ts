@@ -5,6 +5,7 @@ import http from 'http';
 import cors from 'cors';
 import { connect } from 'http2';
 import { mysqlConnect } from './services/db_service';
+import { router } from './routes/router';
 
 export const main = async () => {
   dotenv.config();
@@ -24,6 +25,8 @@ export const main = async () => {
     user: 'root',
     password: 'root',
   });
+
+  app.use('/', router)
 
   server.listen(process.env.PORT, () => {
     console.log(`Server running at port ${process.env.PORT}`);

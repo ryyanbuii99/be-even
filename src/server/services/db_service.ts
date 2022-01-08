@@ -1,41 +1,30 @@
 import mysql from 'mysql2';
+import { v4 } from 'uuid';
+
+const connection = mysql.createConnection({
+  host: 'localhost',
+  port: 8889,
+  user: 'root',
+  password: 'root',
+  database: process.env.DATABASE_NAME || 'quote_machine',
+});
 
 export const mysqlConnect = async () => {
-  const connection = mysql.createConnection({
-    host: 'localhost',
-    port: 8889,
-    user: 'root',
-    password: 'root',
-    database: process.env.DATABASE_NAME || 'quote_machine',
-  });
-
   connection.connect((err: any) => {
     if (err) throw err;
-    createTablesToDB(connection);
     console.log('connected');
   });
 };
 
-const createTablesToDB = (connection: mysql.Connection) => {
-  const createUsersTable =
-    'CREATE TABLE Users (username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, userID VARCHAR(255) NOT NULL PRIMARY KEY)';
+export const createUser = async (username: string, password: string) => {
+  try {
+    const uuid = v4();
+    const userTable = `INSERT INTO Users (username, password, userID) VALUES ('${username}', '${password}', '${uuid}')`;
 
-  const createQuotesTable = `CREATE TABLE Quotes (quote TEXT NOT NULL, quoteID VARCHAR(255) NOT NULL, userID VARCHAR(255) NOT NULL, PRIMARY KEY (quoteID, userID))`;
-
-  const createRatingsTable = `CREATE TABLE Ratings (rating INT  NOT NULL, quoteID VARCHAR(255) NOT NULL, userID VARCHAR(255) NOT NULL, PRIMARY KEY (quoteID, userID))`;
-
-  connection.query(createUsersTable, (err, result) => {
-    if (err) throw err;
-    console.log('created Users table');
-  });
-
-  connection.query(createQuotesTable, (err, result) => {
-    if (err) throw err;
-    console.log('created Quotes table');
-  });
-
-  connection.query(createRatingsTable, (err, result) => {
-    if (err) throw err;
-    console.log('created Ratings table');
-  });
+    connection.query(userTable, (err, result) => {
+      if (err) throw err;
+    });
+  } catch (err) {
+    throw err;
+  }
 };
