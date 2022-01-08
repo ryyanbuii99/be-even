@@ -4,10 +4,14 @@ import dotenv from 'dotenv';
 import http from 'http';
 import cors from 'cors';
 import { connect } from 'http2';
+import { mysqlConnect } from './services/db_service';
 
 export const main = async () => {
   dotenv.config();
 
+  // Connect to db
+  await mysqlConnect()
+  
   const app = express();
   const server = http.createServer(app);
 
@@ -19,15 +23,6 @@ export const main = async () => {
     port: 8889,
     user: 'root',
     password: 'root',
-  });
-
-  db.connect((err: any) => {
-    if (err) {
-      console.log(err);
-      throw err;
-    } else {
-      console.log('connected');
-    }
   });
 
   server.listen(process.env.PORT, () => {
