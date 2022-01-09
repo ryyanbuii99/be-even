@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
 import { Modal, Form, Button } from 'react-bootstrap';
-import onChangeHelper from '../../helpers/onChangeHelper';
+import APIService from '../../helpers/APIService';
+import Authentication from '../../helpers/Authentication';
+import IUserQuote from '../../interfaces/IUserQuote';
 
 export default function CreateQuoteModal(props: any) {
-  const [quote, setQuote] = React.useState<string>('');
+  const userID = Authentication.getUser().userID;
+  const [quote, setQuote] = useState<IUserQuote>({
+    quote: '',
+    userID: userID,
+  });
   const { closeonsubmit, ...modalProps } = props;
 
-  const publishQuote = () => {
-    console.log(quote);
+  const publishQuote = async () => {
+    await APIService.postCreateQuote(quote);
     closeonsubmit();
   };
+
+  const onChange = (e: any) => {
+    setQuote({ ...quote, quote: e.target.value });
+  };
+
   return (
     <div>
       <Modal {...modalProps} centered>
@@ -26,7 +37,7 @@ export default function CreateQuoteModal(props: any) {
               <Form.Control
                 as='textarea'
                 rows={3}
-                onChange={(e) => onChangeHelper(e, setQuote)}
+                onChange={(e) => onChange(e)}
               />
             </Form.Group>
           </Form>

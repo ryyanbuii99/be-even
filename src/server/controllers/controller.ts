@@ -1,4 +1,4 @@
-import { authenticate, createUser } from '../services/db_service';
+import { authenticate, createUser, newQuote } from '../services/db_service';
 
 export class Controller {
   async register(req: any, res: any) {
@@ -18,12 +18,33 @@ export class Controller {
       const username: string = req.body.username;
       const password: string = req.body.password;
 
-      if (username && password) {
-        await authenticate(username, password);
-        res.status(200).json({ message: 'login successful' });
+      const user = await authenticate(username, password, res);
+      if (user) {
+        req.session.signedIn = true;
+        req.session.username = username;
+        console.log('login successful');
+        res.status(200).json({ message: 'login successful', user });
+      } else {
+        res.status(403).json({ message: 'invalid credentials' });
       }
     } catch (error: any) {
-      res.status(400).json({ message: error.message });
+      res.status(403).json({ message: error.message });
+    }
+  }
+
+  async createQuote(req: any, res: any) {
+    try {
+      const quote: string = req.body.quote
+      const userID: string = req.body.userID
+
+      if (quote.length <= 0) {
+        res.status(403).json({ message: 'invalid credentials' });
+      } else {
+        await newQuote(quote, userID)
+        res.status(200).json({ message: 'quote is created!' });
+      }
+    } catch (error) {
+      
     }
   }
 }
