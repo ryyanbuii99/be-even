@@ -28,3 +28,22 @@ export const createUser = async (username: string, password: string) => {
     throw err;
   }
 };
+
+export const authenticate = async (username: string, password: string) => {
+  try {
+    const loginQuery =
+      'SELECT * FROM Users WHERE username = ? AND password = ?';
+
+    connection.query(
+      loginQuery,
+      [username, password],
+      (err, result, fields) => {
+        if (err) {
+          throw err;
+        }
+      }
+    );
+  } catch (err) {
+    throw err;
+  }
+};
