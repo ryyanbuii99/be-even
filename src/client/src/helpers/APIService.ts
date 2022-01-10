@@ -19,6 +19,16 @@ const APIService = {
         const response = await axios.post(`${URL}/createQuote`, quote)
         return response
     },
+
+    async getMyQuotes (id: string) {
+        const response = await axios.get(`${URL}/getAllUserQuotes/${id}`)
+        return response
+    },
+
+    async getAllQuotes (id: string) {
+        const response = await axios.get(`${URL}/getAllQuotes/${id}`)
+        return response
+    },
 }
 
 export default APIService

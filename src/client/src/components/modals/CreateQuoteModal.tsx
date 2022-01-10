@@ -14,6 +14,7 @@ export default function CreateQuoteModal(props: any) {
 
   const publishQuote = async () => {
     await APIService.postCreateQuote(quote);
+    setQuote({...quote, quote: ''})
     closeonsubmit();
   };
 

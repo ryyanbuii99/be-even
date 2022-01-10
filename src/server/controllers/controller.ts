@@ -1,4 +1,11 @@
-import { authenticate, createUser, newQuote } from '../services/db_service';
+import {
+  authenticate,
+  checkIfUserExists,
+  createUser,
+  getAllQuotes,
+  getAllUserQuotes,
+  newQuote,
+} from '../services/db_service';
 
 export class Controller {
   async register(req: any, res: any) {
@@ -34,17 +41,45 @@ export class Controller {
 
   async createQuote(req: any, res: any) {
     try {
-      const quote: string = req.body.quote
-      const userID: string = req.body.userID
+      const quote: string = req.body.quote;
+      const userID: string = req.body.userID;
 
       if (quote.length <= 0) {
-        res.status(403).json({ message: 'invalid credentials' });
+        res.status(403).json({ message: 'Cannot leave quote field empty' });
       } else {
-        await newQuote(quote, userID)
+        await newQuote(quote, userID);
         res.status(200).json({ message: 'quote is created!' });
       }
     } catch (error) {
-      
+      throw error;
+    }
+  }
+
+  async getAllUserQuotes(req: any, res: any) {
+    try {
+      const userID: string = req.params.id;
+      let doesUserExist = await checkIfUserExists(userID);
+      let userQuoteData = await getAllUserQuotes(userID, res);
+
+      if (!doesUserExist) {
+        res.status(400).json({ message: 'user does not exist' });
+      } else {
+        res
+          .status(200)
+          .json({ message: 'fetched all user quotes', userQuoteData });
+      }
+    } catch (error) {
+      res.status(400).json({ message: error });
+    }
+  }
+
+  async getAllQuotes(req: any, res: any) {
+    try {
+      const userID: string = req.params.id;
+      const allQuotesData = await getAllQuotes(userID, res);
+      res.status(200).json({ message: 'all quotes are fetched', allQuotesData });
+    } catch (error) {
+      throw error;
     }
   }
 }

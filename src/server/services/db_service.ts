@@ -71,4 +71,58 @@ export const newQuote = async (quote: string, userID: string) => {
   } catch (err) {
     throw err;
   }
-}
+};
+
+export const getAllUserQuotes = async (userID: string, res: any) => {
+  try {
+    const allUserQuotesQuery = `
+    SELECT Users.username, Quotes.quote, Quotes.quoteID
+    FROM Quotes
+    INNER JOIN Users ON Users.userID = Quotes.userID
+    WHERE Quotes.userID = ?
+    `;
+    return new Promise((resolve, reject) => {
+      connection.query(allUserQuotesQuery, [userID], (err, result: any) => {
+        console.log(result)
+        resolve(result);
+      });
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAllQuotes = async (userID: any, res: any) => {
+  try {
+    const allQuotesQuery = `
+    SELECT Users.username, Quotes.quote, Quotes.quoteID
+    FROM Quotes
+    INNER JOIN Users ON Users.userID = Quotes.userID
+    WHERE Quotes.userID <> ?
+    `;
+    return new Promise((resolve, reject) => {
+      connection.query(allQuotesQuery, [userID], (err, result: any) => {
+        console.log(result);
+        resolve(result);
+      });
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const checkIfUserExists = async (userID: string) => {
+  try {
+    const userExists = 'SELECT * FROM Users WHERE userID = ?';
+    return new Promise((resolve, reject) => {
+      connection.query(userExists, [userID], (err, result: any) => {
+        if (result.length > 0) {
+          resolve(true);
+        }
+        resolve(false);
+      });
+    });
+  } catch (error) {
+    throw error;
+  }
+};

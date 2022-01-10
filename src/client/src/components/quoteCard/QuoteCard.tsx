@@ -5,7 +5,7 @@ import closeModalOnSubmit from '../../helpers/closeModalOnSubmit';
 import EditQuoteModal from '../modals/EditQuoteModal';
 import RateQuote from '../modals/RateQuote';
 
-export default function QuoteCard() {
+export default function QuoteCard(props: any) {
   const [editQuoteModalShow, setEditQuoteModalShow] = useState(false);
   const location = useLocation();
 
@@ -34,13 +34,12 @@ export default function QuoteCard() {
   };
 
   return (
-    <Card style={{ width: 'max-content' }}>
+    <Card className='w-100 mb-3'>
       <Card.Body>
-        <Card.Title>Author</Card.Title>
+        <Card.Title>{props.name}</Card.Title>
         <Card.Subtitle className='mb-2 text-muted'>Rating: 10</Card.Subtitle>
         <Card.Text>
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
+          {props.quote}
         </Card.Text>
         <div className='card-buttons'>
             <CheckIfOnProfilePath />

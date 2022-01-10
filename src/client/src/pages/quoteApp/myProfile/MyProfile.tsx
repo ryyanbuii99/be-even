@@ -1,12 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import NavBar from '../../../components/navbar/NavBar';
 import CreateQuoteModal from '../../../components/modals/CreateQuoteModal';
 import QuoteCard from '../../../components/quoteCard/QuoteCard';
 import closeModalOnSubmit from '../../../helpers/closeModalOnSubmit';
+import APIService from '../../../helpers/APIService';
+import Authentication from '../../../helpers/Authentication';
 
 export default function MyProfile() {
   const [createQuoteModalShow, setCreateQuoteModalShow] = useState(false);
+  const [myQuotes, setMyQuotes] = useState([]);
+  const userID = Authentication.getUser().userID;
+
+  useEffect(() => {
+    const getMyQuotes = async () => {
+      try {
+        const response = await APIService.getMyQuotes(userID);
+        setMyQuotes(response.data.userQuoteData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getMyQuotes();
+    console.log(myQuotes)
+  }, []);
 
   return (
     <>
@@ -29,7 +46,18 @@ export default function MyProfile() {
           onHide={() => setCreateQuoteModalShow(false)}
           closeonsubmit={() => closeModalOnSubmit(setCreateQuoteModalShow)}
         />
-        <QuoteCard />
+        {myQuotes.map((quotes: any) => (
+          <QuoteCard
+            key={quotes.quoteID}
+            name={quotes.username}
+            quote={quotes.quote}
+          />
+        ))}
+        {myQuotes.length <= 0 && (
+          <>
+            <h1>No quotes</h1>
+          </>
+        )}
       </Container>
     </>
   );
