@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
+import APIService from '../../helpers/APIService';
 import closeModalOnSubmit from '../../helpers/closeModalOnSubmit';
 import EditQuoteModal from '../modals/EditQuoteModal';
 import RateQuote from '../modals/RateQuote';
@@ -9,7 +10,11 @@ export default function QuoteCard(props: any) {
   const [editQuoteModalShow, setEditQuoteModalShow] = useState(false);
   const location = useLocation();
 
-  console.log(props)
+  const onDelete = async () => {
+    console.log(props.quoteID)
+    await APIService.deleteQuote(props.quoteID)
+  }
+
   const CheckIfOnProfilePath = () => {
     if (location.pathname === '/gigaQuote/profile') {
       return (
@@ -22,7 +27,7 @@ export default function QuoteCard(props: any) {
             onHide={() => setEditQuoteModalShow(false)}
             closeonsubmit={() => closeModalOnSubmit(setEditQuoteModalShow)}
           />
-          <Button variant='danger'>Delete Quote</Button>
+          <Button variant='danger' onClick={onDelete}>Delete Quote</Button>
         </>
       );
     }

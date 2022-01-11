@@ -5,6 +5,7 @@ import LoginPage from './pages/loginPage/LoginPage';
 import AllQuotes from './pages/quoteApp/allQuotes/AllQuotes';
 import MyProfile from './pages/quoteApp/myProfile/MyProfile';
 import QuoteApp from './pages/quoteApp/QuoteApp';
+import Top5MostVotes from './pages/quoteApp/top5/Top5MostVotes';
 import RegisterPage from './pages/registerPage/RegisterPage';
 import WelcomePage from './pages/welcomePage/WelcomePage';
 
@@ -19,6 +20,7 @@ function App() {
           <Route path='/register' element={<RegisterPage />} />
           <Route path='/gigaQuote/allQuotes' element={<AllQuotes />} />
           <Route path='/gigaQuote/profile' element={<MyProfile />} />
+          <Route path='/gigaQuote/top5' element={<Top5MostVotes />} />
         </Routes>
       </BrowserRouter>
     </div>

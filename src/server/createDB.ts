@@ -63,3 +63,13 @@ const createTablesToDB = () => {
 
 createDB();
 createTablesToDB();
+
+// CREATE VIEW top_5_voted AS
+// SELECT Users.username, Quotes.quote, AVG(Ratings.rating)
+// AS avgRating, COUNT(Quotes.quoteID) as rateCount
+// FROM Quotes 
+// JOIN Users ON Users.userID = Quotes.userID 
+// JOIN Ratings ON Quotes.quoteID = Ratings.quoteID
+// GROUP BY Quotes.quoteID
+// ORDER BY rateCount DESC
+// LIMIT 5

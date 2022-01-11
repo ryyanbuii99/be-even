@@ -2,8 +2,10 @@ import {
   authenticate,
   checkIfUserExists,
   createUser,
+  deleteQuote,
   getAllQuotes,
   getAllUserQuotes,
+  getTopVotedQuotes,
   newQuote,
   rateQuote,
 } from '../services/db_service';
@@ -91,6 +93,25 @@ export class Controller {
       const userID: string = req.body.userID;
       await rateQuote(rating, quoteID, userID);
       res.status(200).json({ message: 'Rated quote success' });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getTop5VotedQuotes(req: any, res: any) {
+    try {
+      const top5VotedQuotes = await getTopVotedQuotes();
+      res.status(200).json({ message: 'Got top 5 voted quotes', top5VotedQuotes });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteQuote(req: any, res: any) {
+    try {
+      const quoteID = req.params.id
+      await deleteQuote(quoteID);
+      res.status(200).json({ message: 'Delete successful' });
     } catch (error) {
       throw error;
     }

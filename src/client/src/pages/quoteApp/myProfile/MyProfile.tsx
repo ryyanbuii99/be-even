@@ -6,6 +6,7 @@ import QuoteCard from '../../../components/quoteCard/QuoteCard';
 import closeModalOnSubmit from '../../../helpers/closeModalOnSubmit';
 import APIService from '../../../helpers/APIService';
 import Authentication from '../../../helpers/Authentication';
+import { RatingContext } from '../allQuotes/AllQuotes';
 
 export default function MyProfile() {
   const [createQuoteModalShow, setCreateQuoteModalShow] = useState(false);
@@ -22,7 +23,6 @@ export default function MyProfile() {
       }
     };
     getMyQuotes();
-    console.log(myQuotes)
   }, []);
 
   return (
@@ -46,12 +46,16 @@ export default function MyProfile() {
           onHide={() => setCreateQuoteModalShow(false)}
           closeonsubmit={() => closeModalOnSubmit(setCreateQuoteModalShow)}
         />
-        {myQuotes.map((quotes: any) => (
-          <QuoteCard
-            key={quotes.quoteID}
-            name={quotes.username}
-            quote={quotes.quote}
-          />
+        {myQuotes.map((quotes: any, i: number) => (
+          <RatingContext.Provider value={quotes.quoteID} key={i}>
+            <QuoteCard
+              key={quotes.quoteID}
+              name={quotes.username}
+              quote={quotes.quote}
+              quoteID={quotes.quoteID}
+              avgRating={quotes.avgRating}
+            />
+          </RatingContext.Provider>
         ))}
         {myQuotes.length <= 0 && (
           <>

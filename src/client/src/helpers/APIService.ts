@@ -35,6 +35,16 @@ const APIService = {
         const response = await axios.post(`${URL}/rateQuote`, rating)
         return response
     },
+
+    async getTop5 () {
+        const response = await axios.get(`${URL}/getTop5`)
+        return response
+    },
+
+    async deleteQuote (quoteID: string) {
+        const response = await axios.delete(`${URL}/deleteQuote/${quoteID}`)
+        return response
+    },
 }
 
 export default APIService

@@ -11,13 +11,11 @@ export default function NavBar() {
           <Link to='/gigaQuote/allQuotes'>GigaQuote</Link>
         </Navbar.Brand>
         <Nav className='me-auto'>
-          <Link to='/gigaQuote/allQuotes' className='mx-4'>
-            All Quotes
+          <Link to='/gigaQuote/allQuotes'>All Quotes</Link>
+          <Link to='/gigaQuote/top5' className='mx-4'>
+            Most voted quotes
           </Link>
-
-          <Link to='/gigaQuote/profile'>
-            My Profile
-          </Link>
+          <Link to='/gigaQuote/profile'>My Profile</Link>
         </Nav>
       </Container>
     </Navbar>

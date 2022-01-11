@@ -5,7 +5,7 @@ import QuoteCard from '../../../components/quoteCard/QuoteCard';
 import APIService from '../../../helpers/APIService';
 import Authentication from '../../../helpers/Authentication';
 
-export const RatingContext = createContext<any[]>([]);
+export const RatingContext = createContext([]);
 export default function AllQuotes() {
   const [allQuotes, setAllQuotes] = useState([]);
 
@@ -14,10 +14,10 @@ export default function AllQuotes() {
     const getAllQuotes = async () => {
       const response = await APIService.getAllQuotes(userID);
       setAllQuotes(response.data.allQuotesData);
+      console.log(response.data)
     };
     getAllQuotes();
   }, []);
-  console.log(allQuotes)
 
   return (
     <>
@@ -34,7 +34,7 @@ export default function AllQuotes() {
           <QuoteCard
             name={quotes.username}
             quote={quotes.quote}
-            avgRating={Math.round(quotes.average_rating * 10 / 10).toFixed(1)}
+            avgRating={(quotes.avgRating * 10 / 10).toFixed(1)}
           />
           </RatingContext.Provider>
         ))}
