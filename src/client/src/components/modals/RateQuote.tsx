@@ -1,15 +1,27 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
-// import StarIcon from '@mui/icons-material/Star';
+import IRateQuote from '../../interfaces/IRateQuote';
+import { RatingContext } from '../../pages/quoteApp/allQuotes/AllQuotes';
+import APIService from '../../helpers/APIService';
+import Authentication from '../../helpers/Authentication';
 
-export default function RateQuote() {
-  const [value, setValue] = React.useState<number | null>(0);
-  const [hover, setHover] = React.useState(-1);
+export default function RateQuote(props: any) {
+  const [value, setValue] = useState<number>(props.avgRating);
+  const [hover, setHover] = useState(-1);
+  const quoteID = useContext(RatingContext);
+  const userID = Authentication.getUser().userID;
+  const [rating, setRating] = useState<IRateQuote>({
+    rating: 0,
+    quoteID: quoteID,
+    userID: userID,
+  });
 
-  const sumbitRating = (rating: number | null) => {
+  const sumbitRating = async () => {
+    await APIService.rateQuote(rating)
     console.log(rating);
+    setValue(0);
   };
 
   return (
@@ -19,15 +31,16 @@ export default function RateQuote() {
           name='rating'
           value={value}
           precision={0.5}
-          onChange={(event, newValue) => {
+          onChange={(event, newValue: any) => {
             setValue(newValue);
+            setRating({ ...rating, rating: newValue });
           }}
           onChangeActive={(event, newHover) => {
             setHover(newHover);
           }}
         />
       </Stack>
-      <Button variant='primary' onClick={() => sumbitRating(value)}>
+      <Button variant='primary' onClick={() => sumbitRating()}>
         Rate Quote
       </Button>
     </div>

@@ -5,6 +5,7 @@ import {
   getAllQuotes,
   getAllUserQuotes,
   newQuote,
+  rateQuote,
 } from '../services/db_service';
 
 export class Controller {
@@ -78,6 +79,18 @@ export class Controller {
       const userID: string = req.params.id;
       const allQuotesData = await getAllQuotes(userID, res);
       res.status(200).json({ message: 'all quotes are fetched', allQuotesData });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async rateQuote(req: any, res: any) {
+    try {
+      const quoteID: string = req.body.quoteID
+      const rating: number = req.body.rating
+      const userID: string = req.body.userID;
+      await rateQuote(rating, quoteID, userID);
+      res.status(200).json({ message: 'Rated quote success' });
     } catch (error) {
       throw error;
     }

@@ -7,5 +7,6 @@ const controller = new Controller();
 router.post('/register', controller.register);
 router.post('/login', controller.authenticate);
 router.post('/createQuote', controller.createQuote);
+router.post('/rateQuote', controller.rateQuote);
 router.get('/getAllQuotes/:id', controller.getAllQuotes);
 router.get('/getAllUserQuotes/:id', controller.getAllUserQuotes);

@@ -67,6 +67,7 @@ export const newQuote = async (quote: string, userID: string) => {
 
     connection.query(insertNewQuote, (err, result) => {
       if (err) throw err;
+      addRatingAfterQuoteCreation(uuid, userID);
     });
   } catch (err) {
     throw err;
@@ -83,7 +84,6 @@ export const getAllUserQuotes = async (userID: string, res: any) => {
     `;
     return new Promise((resolve, reject) => {
       connection.query(allUserQuotesQuery, [userID], (err, result: any) => {
-        console.log(result)
         resolve(result);
       });
     });
@@ -95,15 +95,39 @@ export const getAllUserQuotes = async (userID: string, res: any) => {
 export const getAllQuotes = async (userID: any, res: any) => {
   try {
     const allQuotesQuery = `
-    SELECT Users.username, Quotes.quote, Quotes.quoteID
-    FROM Quotes
-    INNER JOIN Users ON Users.userID = Quotes.userID
+    SELECT Users.username, Quotes.quote, Quotes.quoteID, AVG(Ratings.rating) AS avgRating
+    FROM Quotes JOIN Users ON Users.userID = Quotes.userID 
+    JOIN Ratings ON Quotes.quoteID = Ratings.quoteID
     WHERE Quotes.userID <> ?
-    `;
+    GROUP BY Quotes.quoteID`;
+
     return new Promise((resolve, reject) => {
-      connection.query(allQuotesQuery, [userID], (err, result: any) => {
-        console.log(result);
+      connection.query(allQuotesQuery, [userID], (err, result: []) => {
         resolve(result);
+      });
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const rateQuote = async (
+  rating: number,
+  quoteID: string,
+  userID: string
+) => {
+  try {
+    const insertQuoteRating = `INSERT INTO Ratings (rating, quoteID, userID) VALUES ('${rating}', '${quoteID}', '${userID}')`;
+    const deleteIndexAfterRate = `
+    DELETE Ratings FROM Ratings 
+    JOIN Quotes 
+    WHERE (rating = 0 AND Ratings.quoteID = "${quoteID}")
+    `;
+    connection.query(insertQuoteRating, (err, result: any) => {
+      if (err) throw err;
+      connection.query(deleteIndexAfterRate, (err, result: any) => {
+        if (err) throw err;
+        console.log(result);
       });
     });
   } catch (error) {
@@ -121,6 +145,17 @@ export const checkIfUserExists = async (userID: string) => {
         }
         resolve(false);
       });
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const addRatingAfterQuoteCreation = async (quoteID: string, userID: string) => {
+  try {
+    const insertQuoteRating = `INSERT INTO Ratings (rating, quoteID, userID) VALUES ('0', '${quoteID}', '${userID}')`;
+    connection.query(insertQuoteRating, (err, result: any) => {
+      if (err) throw err;
     });
   } catch (error) {
     throw error;

@@ -1,4 +1,5 @@
 import axios from "axios"
+import IRateQuote from "../interfaces/IRateQuote";
 import IUser from "../interfaces/IUser";
 import IUserQuote from "../interfaces/IUserQuote";
 
@@ -27,6 +28,11 @@ const APIService = {
 
     async getAllQuotes (id: string) {
         const response = await axios.get(`${URL}/getAllQuotes/${id}`)
+        return response
+    },
+
+    async rateQuote (rating: IRateQuote) {
+        const response = await axios.post(`${URL}/rateQuote`, rating)
         return response
     },
 }

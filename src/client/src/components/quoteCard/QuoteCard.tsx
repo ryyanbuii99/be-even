@@ -9,6 +9,7 @@ export default function QuoteCard(props: any) {
   const [editQuoteModalShow, setEditQuoteModalShow] = useState(false);
   const location = useLocation();
 
+  console.log(props)
   const CheckIfOnProfilePath = () => {
     if (location.pathname === '/gigaQuote/profile') {
       return (
@@ -28,7 +29,7 @@ export default function QuoteCard(props: any) {
 
     return (
       <>
-        <RateQuote />
+        <RateQuote avgRating={props.avgRating} />
       </>
     );
   };
@@ -37,7 +38,7 @@ export default function QuoteCard(props: any) {
     <Card className='w-100 mb-3'>
       <Card.Body>
         <Card.Title>{props.name}</Card.Title>
-        <Card.Subtitle className='mb-2 text-muted'>Rating: 10</Card.Subtitle>
+        <Card.Subtitle className='mb-2 text-muted'>Rating: {props.avgRating}</Card.Subtitle>
         <Card.Text>
           {props.quote}
         </Card.Text>
