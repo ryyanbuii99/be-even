@@ -17,13 +17,22 @@ export const mysqlConnect = async () => {
   });
 };
 
-export const createUser = async (username: string, password: string) => {
+export const createUser = async (
+  username: string,
+  password: string,
+  res: any
+) => {
   try {
     const uuid = v4();
     const insertNewUser = `INSERT INTO Users (username, password, userID) VALUES ('${username}', '${password}', '${uuid}')`;
-
-    connection.query(insertNewUser, (err, result) => {
-      if (err) throw err;
+    return new Promise((resolve, reject) => {
+      connection.query(insertNewUser, (err, result) => {
+        if (err) {
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
     });
   } catch (err) {
     throw err;
@@ -135,7 +144,6 @@ export const getTopVotedQuotes = async () => {
     const top5 = `SELECT * FROM top_5_voted`;
     return new Promise((resolve, reject) => {
       connection.query(top5, (err, result: any) => {
-        console.log(result);
         resolve(result);
       });
     });
@@ -160,13 +168,30 @@ export const checkIfUserExists = async (userID: string) => {
   }
 };
 
-export const deleteQuote = async (quoteID: string) => {
+export const deleteQuote = async (quoteID: string, userID: string) => {
   try {
     const deleteQuery = `
     DELETE Ratings, Quotes FROM Ratings 
     JOIN Quotes
-    WHERE (Ratings.quoteID = '${quoteID}' AND Quotes.quoteID = '${quoteID}')`;
+    JOIN Users
+    WHERE (Ratings.quoteID = '${quoteID}' 
+    AND Quotes.quoteID = '${quoteID}'
+    AND Users.userID = '${userID}')`;
     connection.query(deleteQuery, (err, result: any) => {
+      if (err) throw err;
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateQuote = async (quote: string, userID: string) => {
+  try {
+    const updateQuery = `
+    UPDATE Quotes JOIN Users
+    SET quote = ?
+    WHERE Users.userID = ?`;
+    connection.query(updateQuery, [quote, userID], (err, result: any) => {
       if (err) throw err;
     });
   } catch (error) {

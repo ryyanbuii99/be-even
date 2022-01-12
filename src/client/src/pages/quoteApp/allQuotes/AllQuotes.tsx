@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { Container } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import NavBar from '../../../components/navbar/NavBar';
 import QuoteCard from '../../../components/quoteCard/QuoteCard';
 import APIService from '../../../helpers/APIService';
@@ -8,16 +9,21 @@ import Authentication from '../../../helpers/Authentication';
 export const RatingContext = createContext([]);
 export default function AllQuotes() {
   const [allQuotes, setAllQuotes] = useState([]);
+  const userID = Authentication.getUser().userID;
+  const navigate = useNavigate();
+
 
   useEffect(() => {
-    const userID = Authentication.getUser().userID;
+    if (userID == undefined || userID == 'null') {
+      navigate('/')
+    }
     const getAllQuotes = async () => {
       const response = await APIService.getAllQuotes(userID);
       setAllQuotes(response.data.allQuotesData);
-      console.log(response.data)
     };
     getAllQuotes();
   }, []);
+
 
   return (
     <>

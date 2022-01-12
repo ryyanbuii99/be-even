@@ -2,17 +2,22 @@ import React, { useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
 import APIService from '../../helpers/APIService';
+import Authentication from '../../helpers/Authentication';
 import closeModalOnSubmit from '../../helpers/closeModalOnSubmit';
 import EditQuoteModal from '../modals/EditQuoteModal';
 import RateQuote from '../modals/RateQuote';
 
 export default function QuoteCard(props: any) {
   const [editQuoteModalShow, setEditQuoteModalShow] = useState(false);
+  const userID = Authentication.getUser().userID
   const location = useLocation();
 
   const onDelete = async () => {
-    console.log(props.quoteID)
-    await APIService.deleteQuote(props.quoteID)
+    const obj = {
+      quoteID: props.quoteID
+    }
+    await APIService.deleteQuote(userID, obj)
+    props.update()
   }
 
   const CheckIfOnProfilePath = () => {
@@ -26,6 +31,7 @@ export default function QuoteCard(props: any) {
             show={editQuoteModalShow}
             onHide={() => setEditQuoteModalShow(false)}
             closeonsubmit={() => closeModalOnSubmit(setEditQuoteModalShow)}
+            update={props.update}
           />
           <Button variant='danger' onClick={onDelete}>Delete Quote</Button>
         </>

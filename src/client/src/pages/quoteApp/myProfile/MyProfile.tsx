@@ -7,13 +7,19 @@ import closeModalOnSubmit from '../../../helpers/closeModalOnSubmit';
 import APIService from '../../../helpers/APIService';
 import Authentication from '../../../helpers/Authentication';
 import { RatingContext } from '../allQuotes/AllQuotes';
+import { useNavigate } from 'react-router-dom';
 
 export default function MyProfile() {
   const [createQuoteModalShow, setCreateQuoteModalShow] = useState(false);
   const [myQuotes, setMyQuotes] = useState([]);
   const userID = Authentication.getUser().userID;
+  const navigate = useNavigate();
+  let [updateUseEffect, setUpdateUseEffect] = useState(0)
 
   useEffect(() => {
+    if (userID == undefined || userID == 'null') {
+      navigate('/')
+    }
     const getMyQuotes = async () => {
       try {
         const response = await APIService.getMyQuotes(userID);
@@ -23,7 +29,11 @@ export default function MyProfile() {
       }
     };
     getMyQuotes();
-  }, []);
+  }, [updateUseEffect]);
+
+  const update = () => {
+    setUpdateUseEffect(updateUseEffect += 1)
+  }
 
   return (
     <>
@@ -47,13 +57,13 @@ export default function MyProfile() {
           closeonsubmit={() => closeModalOnSubmit(setCreateQuoteModalShow)}
         />
         {myQuotes.map((quotes: any, i: number) => (
-          <RatingContext.Provider value={quotes.quoteID} key={i}>
+          <RatingContext.Provider value={quotes.quote} key={i}>
             <QuoteCard
-              key={quotes.quoteID}
               name={quotes.username}
               quote={quotes.quote}
               quoteID={quotes.quoteID}
               avgRating={quotes.avgRating}
+              update={update}
             />
           </RatingContext.Provider>
         ))}

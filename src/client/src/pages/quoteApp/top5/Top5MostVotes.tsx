@@ -4,13 +4,20 @@ import Rating from '@mui/material/Rating';
 import Stack from '@mui/material/Stack';
 import APIService from '../../../helpers/APIService';
 import NavBar from '../../../components/navbar/NavBar';
+import Authentication from '../../../helpers/Authentication';
+import { useNavigate } from 'react-router-dom';
 
 export default function Top5MostVotes() {
   const [top5, setTop5] = useState([]);
+  const userID = Authentication.getUser().userID;
+  const navigate = useNavigate();
+
   useEffect(() => {
+    if (userID == undefined || userID == 'null') {
+      navigate('/');
+    }
     const getTop5 = async () => {
       const response = await APIService.getTop5();
-      console.log(response.data.top5VotedQuotes);
       setTop5(response.data.top5VotedQuotes);
     };
     getTop5();
@@ -20,15 +27,10 @@ export default function Top5MostVotes() {
     <>
       <NavBar />
       <Container className='d-flex flex-column justify-content-center align-items-center'>
-        <div
-          className='mt-4 pb-4'
-          style={{ width: '100%' }}
-        >
+        <div className='mt-4 pb-4' style={{ width: '100%' }}>
           <h1>Top 5 most voted quotes</h1>
         </div>
-        {top5.length == 0 && (
-            <h3>No quotes to display</h3>
-        )}
+        {top5.length == 0 && <h3>No quotes to display</h3>}
         {top5.map((quotes: any, id: number) => (
           <Card className='w-100 mb-3' key={id}>
             <Card.Body>

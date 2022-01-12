@@ -12,3 +12,4 @@ router.get('/getAllQuotes/:id', controller.getAllQuotes);
 router.get('/getAllUserQuotes/:id', controller.getAllUserQuotes);
 router.get('/getTop5', controller.getTop5VotedQuotes);
 router.delete('/deleteQuote/:id', controller.deleteQuote);
+router.put('/updateQuote/:id', controller.updateQuote);

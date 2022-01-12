@@ -7,6 +7,8 @@ import IUser from '../../interfaces/IUser';
 import Authentication from '../../helpers/Authentication';
 
 export default function LoginPage() {
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [displayError, setDisplayError] = useState<boolean>(false);
   const navigate = useNavigate();
   const [user, setUser] = useState<IUser>({
     username: '',
@@ -19,17 +21,28 @@ export default function LoginPage() {
       const userData = response.data.user;
       Authentication.setUser(userData);
       navigate('/gigaQuote/profile');
-    } catch (error) {
+    } catch (error: any) {
+      setErrorMessage(error.response.data.message);
+      setDisplayError(true);
+      setUser({...user, username: '', password: ''})
       return;
     }
   };
 
   return (
-    <Container className='d-flex justify-content-center align-items-center h-100'>
+    <Container className='d-flex flex-column justify-content-center align-items-center h-100'>
+      <Alert
+        variant='danger'
+        className='w-75'
+        style={{ visibility: displayError ? 'visible' : 'hidden' }}
+        onClose={() => setDisplayError(false)}
+        dismissible
+      >
+        {errorMessage}
+      </Alert>
       <Form id='form' className='p-5 w-75'>
         <h1>Sign In</h1>
-
-        <Form.Group className='mb-4' /* controlId="email" */>
+        <Form.Group className='mb-4'>
           <Form.Label>Username</Form.Label>
           <Form.Control
             type='text'
@@ -60,7 +73,10 @@ export default function LoginPage() {
             Submit
           </Button>
           <Form.Text className='text-muted'>
-            Not registered? <Link to='/register'>Sign Up!</Link>
+            Not registered?{' '}
+            <Link style={{ color: '#0a58ca' }} to='/register'>
+              Sign Up!
+            </Link>
           </Form.Text>
         </Form.Group>
       </Form>

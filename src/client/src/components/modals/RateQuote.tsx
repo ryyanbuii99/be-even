@@ -20,7 +20,6 @@ export default function RateQuote(props: any) {
 
   const sumbitRating = async () => {
     await APIService.rateQuote(rating)
-    console.log(rating);
     setValue(0);
   };
 
