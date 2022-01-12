@@ -55,6 +55,7 @@ export default function MyProfile() {
           show={createQuoteModalShow}
           onHide={() => setCreateQuoteModalShow(false)}
           closeonsubmit={() => closeModalOnSubmit(setCreateQuoteModalShow)}
+          update={update}
         />
         {myQuotes.map((quotes: any, i: number) => (
           <RatingContext.Provider value={quotes.quote} key={i}>

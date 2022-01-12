@@ -41,7 +41,7 @@ export default function QuoteCard(props: any) {
 
     return (
       <>
-        <RateQuote avgRating={props.avgRating} />
+        <RateQuote avgRating={props.avgRating} update={props.update} />
       </>
     );
   };

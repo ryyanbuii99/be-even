@@ -10,11 +10,12 @@ export default function CreateQuoteModal(props: any) {
     quote: '',
     userID: userID,
   });
-  const { closeonsubmit, ...modalProps } = props;
+  const { closeonsubmit, update, ...modalProps } = props;
 
   const publishQuote = async () => {
     await APIService.postCreateQuote(quote);
     setQuote({...quote, quote: ''})
+    update()
     closeonsubmit();
   };
 
