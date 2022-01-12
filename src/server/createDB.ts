@@ -1,11 +1,13 @@
 import mysql from 'mysql2';
+import dotenv from 'dotenv';
 
+dotenv.config()
 const createDB = () => {
   const connection = mysql.createConnection({
-    host: 'localhost',
-    port: 8889,
-    user: 'root',
-    password: 'root',
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    port: 8889 || process.env.DB_PORT,
   });
 
   connection.connect((err: any) => {
@@ -29,11 +31,11 @@ const createDBIfNotExist = (connection: mysql.Connection) => {
 
 const createTablesToDB = () => {
   const connection = mysql.createConnection({
-    host: 'localhost',
-    port: 8889,
-    user: 'root',
-    password: 'root',
-    database: process.env.DATABASE_NAME || 'quote_machine',
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    port: 8889 || process.env.DB_PORT,
+    database: process.env.DB_NAME || 'quote_machine',
   });
 
   connection.connect((err) => {

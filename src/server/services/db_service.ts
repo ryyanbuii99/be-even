@@ -1,14 +1,15 @@
 import mysql from 'mysql2';
 import { v4 } from 'uuid';
+import dotenv from 'dotenv';
 
+dotenv.config();
 const connection = mysql.createConnection({
-  host: 'localhost',
-  port: 8889,
-  user: 'root',
-  password: 'root',
-  database: process.env.DATABASE_NAME || 'quote_machine',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  port: 8889 || process.env.DB_PORT,
+  database: process.env.DB_NAME,
 });
-let user: Object;
 
 export const mysqlConnect = async () => {
   connection.connect((err: any) => {
