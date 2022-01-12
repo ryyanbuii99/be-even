@@ -32,6 +32,7 @@ export default function QuoteCard(props: any) {
             onHide={() => setEditQuoteModalShow(false)}
             closeonsubmit={() => closeModalOnSubmit(setEditQuoteModalShow)}
             update={props.update}
+            quoteID={props.quoteID}
           />
           <Button variant='danger' onClick={onDelete}>Delete Quote</Button>
         </>

@@ -14,6 +14,7 @@ export default function EditQuoteModal(props: any) {
   const [editQuote, setEditQuote] = useState<IMyQuotes>({
     userID: userID,
     quote: quote,
+    quoteID: props.quoteID
   });
 
   const confirmEditQuote = async () => {

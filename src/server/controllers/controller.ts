@@ -134,7 +134,8 @@ export class Controller {
     try {
       const userID = req.params.id;
       const quote = req.body.quote;
-      await updateQuote(quote, userID);
+      const quoteID = req.body.quoteID;
+      await updateQuote(quote, userID, quoteID);
       res.status(200).json({ message: 'upadte successful' });
     } catch (error) {
       res.status(400).json({ message: error });

@@ -74,9 +74,8 @@ export const newQuote = async (quote: string, userID: string) => {
   try {
     const uuid = v4();
     const insertNewQuote = `INSERT INTO Quotes (quote, quoteID, userID) VALUES ('${quote}', '${uuid}', '${userID}')`;
-
     connection.query(insertNewQuote, (err, result) => {
-      if (err) throw err;
+      if (err) throw err
       addRatingAfterQuoteCreation(uuid, userID);
     });
   } catch (err) {
@@ -186,13 +185,13 @@ export const deleteQuote = async (quoteID: string, userID: string) => {
   }
 };
 
-export const updateQuote = async (quote: string, userID: string) => {
+export const updateQuote = async (quote: string, userID: string, quoteID: string) => {
   try {
     const updateQuery = `
-    UPDATE Quotes JOIN Users
+    UPDATE Quotes
     SET quote = ?
-    WHERE Users.userID = ?`;
-    connection.query(updateQuery, [quote, userID], (err, result: any) => {
+    WHERE userID = ? AND quoteID = ?`;
+    connection.query(updateQuery, [quote, userID, quoteID], (err, result: any) => {
       if (err) throw err;
     });
   } catch (error) {
