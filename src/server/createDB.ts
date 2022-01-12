@@ -1,7 +1,7 @@
 import mysql from 'mysql2';
 import dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
 const createDB = () => {
   const connection = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -16,7 +16,7 @@ const createDB = () => {
       throw err;
     } else {
       createDBIfNotExist(connection);
-      createTablesToDB()
+      createTablesToDB();
       console.log('connected');
     }
   });
@@ -40,10 +40,15 @@ const createTablesToDB = () => {
 
   connection.connect((err) => {
     if (err) throw err;
-    const createUsersTable =
-      'CREATE TABLE Users (username VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, userID VARCHAR(255) NOT NULL PRIMARY KEY)';
+    const createUsersTable = `CREATE TABLE Users (username VARCHAR(255) NOT NULL UNIQUE, 
+      password VARCHAR(255) NOT NULL,
+       userID VARCHAR(255) NOT NULL PRIMARY KEY
+       CONSTRAINT)`;
 
-    const createQuotesTable = `CREATE TABLE Quotes (quote TEXT NOT NULL, quoteID VARCHAR(255) NOT NULL, userID VARCHAR(255) NOT NULL, PRIMARY KEY (quoteID, userID))`;
+    const createQuotesTable = `
+    CREATE TABLE Quotes (quote TEXT NOT NULL, quoteID VARCHAR(255) NOT NULL,
+    userID VARCHAR(255) NOT NULL, 
+    PRIMARY KEY (quoteID, userID))`;
 
     const createRatingsTable = `CREATE TABLE Ratings (rating DOUBLE  NOT NULL, quoteID VARCHAR(255) NOT NULL, userID VARCHAR(255) NOT NULL)`;
 
@@ -57,7 +62,7 @@ const createTablesToDB = () => {
     GROUP BY Quotes.quoteID
     ORDER BY rateCount DESC
     LIMIT 5
-    `
+    `;
 
     connection.query(createUsersTable, (err, result) => {
       if (err) throw err;
@@ -87,8 +92,8 @@ createDB();
 // CREATE VIEW top_5_voted AS
 // SELECT Users.username, Quotes.quote, AVG(Ratings.rating)
 // AS avgRating, COUNT(Quotes.quoteID) as rateCount
-// FROM Quotes 
-// JOIN Users ON Users.userID = Quotes.userID 
+// FROM Quotes
+// JOIN Users ON Users.userID = Quotes.userID
 // JOIN Ratings ON Quotes.quoteID = Ratings.quoteID
 // GROUP BY Quotes.quoteID
 // ORDER BY rateCount DESC

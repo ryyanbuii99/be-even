@@ -17,12 +17,15 @@ export class Controller {
       const username: string = req.body.username;
       const password: string = req.body.password;
 
-      const response = await createUser(username, password, res);
-
-      if (!response) {
-        res.status(403).json({ message: 'user aldreay exists' });
+      if (password.length < 8) {
+        res.status(403).json({ message: 'Password must be longer than 8' });
       } else {
-        res.status(200).json({ message: 'registration successful' });
+        const response = await createUser(username, password, res);
+        if (!response) {
+          res.status(403).json({ message: 'user aldreay exists' });
+        } else {
+          res.status(200).json({ message: 'registration successful' });
+        }
       }
     } catch (error: any) {
       res.status(400).json({ message: error.message });
